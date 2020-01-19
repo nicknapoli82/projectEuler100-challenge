@@ -1,9 +1,13 @@
 function BigNum(num = undefined) {
-  this.result = [];
+  this.numArr = [];
   if (num !== undefined) {
-    this.result = this.determineTypeAndConvert(num);
+    this.numArr = this.determineTypeAndConvert(num);
   }
 }
+
+BigNum.prototype.result = function() {
+  return this.numArr.join('');
+};
 
 BigNum.prototype.numToArray = function(n) {
   let newNum = [];
@@ -31,16 +35,16 @@ BigNum.prototype.determineTypeAndConvert = function(t) {
     return t;
   }
   else if (t instanceof BigNum) {
-    return [...t.result];
+    return [...t.numList];
   }
   return null;
 };
 
 BigNum.prototype.sum = function(...numList) {
-  if (this.result === undefined || this.result === null) this.result = [];
+  if (this.numArr === undefined || this.numArr === null) this.numArr = [];
   let current = null, next;
   for (let n of numList) {
-    current = current ? this.result : [];
+    current = current ? this.numArr : [];
     next = this.determineTypeAndConvert(n);
     let [num1, num2] = current.length >= next.length ? [current, next] : [next, current];
     num2 = [...(new Array(num1.length - num2.length)).fill(0), ...num2];
@@ -53,17 +57,17 @@ BigNum.prototype.sum = function(...numList) {
       }
       else carry = 0;
     }
-    this.result = carry ? [1, ...num1] : num1;
+    this.numArr = carry ? [1, ...num1] : num1;
   }
-  return this.result.join('');
+  return this;
 };
 
 BigNum.prototype.mul = function(...numList) {
-  if (this.result === undefined || this.result === null) this.result = [];
+  if (this.numArr === undefined || this.numArr === null) this.numArr = [];
   let current = null, next;
 
   for (let n of numList) {
-    current = current ? this.result : [1];
+    current = current ? this.numArr : [1];
     next = this.determineTypeAndConvert(n);
     let place = 0;
     let sumCollection = [];
@@ -90,11 +94,16 @@ BigNum.prototype.mul = function(...numList) {
     }
     this.sum(...sumCollection);
   }
-  return this.result.join('');
+  return this;
 };
 
 BigNum.prototype.pow = function(num, exp) {
   this.mul(...new Array(exp).fill(num));
-  console.log(this.result);
-  return this.result.join('');
+  console.log(this.numArr);
+  return this;
+};
+
+BigNum.prototype.div = function(...num) {
+  if (this.numArr === undefined || this.numArr === null) this.numArr = [];
+
 };
